@@ -1,0 +1,9 @@
+# vscode
+.vscode/
+
+# libs
+lib/
+
+# temp files
+*.o
+*.exe
