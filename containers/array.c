@@ -11,6 +11,10 @@ struct DArray {
 };
 
 void DArrayResize_Impl(void *darray, size_t element_size, size_t new_capacity) {
+	if (!darray) {
+		return;
+	}
+
 	struct DArray *_array = (struct DArray *)darray;
 
 	_array->items = realloc(_array->items, new_capacity * element_size);
@@ -28,6 +32,10 @@ void DArrayResize_Impl(void *darray, size_t element_size, size_t new_capacity) {
 }
 
 void DArrayExtend_Impl(void *darray, const void *buffer, size_t element_size, size_t element_count) {
+	if (!darray) {
+		return;
+	}
+
 	struct DArray *_array = (struct DArray *)darray;
 
 	while (_array->capacity < _array->count + element_count) {
@@ -46,6 +54,10 @@ void DArrayFree_Impl(void *darray) {
 }
 
 void DArrayClear_Impl(void *darray) {
+	if (!darray) {
+		return;
+	}
+
 	struct DArray *_array = (struct DArray *)darray;
 	DArrayFree_Impl(_array);
 	_array->count = 0;

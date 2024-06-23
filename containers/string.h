@@ -1,6 +1,8 @@
 #ifndef CCL_DSTRING_H
 #define CCL_DSTRING_H
 
+#include <stdio.h>
+#include <stdbool.h>
 
 #include "array.h"
 
@@ -15,5 +17,6 @@ void DStringConcat(DString *string, const DString *other);
 void DStringFree(DString *string);
 void DStringClear(DString *string);
 
+bool DStringReadFile(DString *string, const char *file_path);
 
 #endif // CCL_DSTRING_H

@@ -1,3 +1,7 @@
+#ifndef CCL_TREE_H
+#define CCL_TREE_H
+
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -31,3 +35,6 @@ TreeNode *TreeAddChildValue(TreeNode *root, void *value, size_t value_size);
 TreeNode *TreeAddChildNode(TreeNode *root, TreeNode *node);
 
 void TreeFree(TreeNode *node);
+
+
+#endif // CCL_TREE_H

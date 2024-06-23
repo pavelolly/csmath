@@ -3,7 +3,7 @@
 
 #include "containers/array.h"
 
-typedef enum {
+typedef enum TokenType {
     NONE = 0,
     NUMBER,
     PLUS,
@@ -14,7 +14,7 @@ typedef enum {
     BRACE_R
 } TokenType;
 
-typedef struct {
+typedef struct Token {
     TokenType type;
     int index;
     int value;
@@ -32,6 +32,8 @@ int TokenizeExpression(Tokens *tokens, const char *expr);
 void printTokens(Tokens *tokens);
 
 #ifdef TOKENIZER_IMPLEMENTATION
+
+#include "containers/string.h"
 
 const char *TokenTypeToString(TokenType type) {
     switch (type) {

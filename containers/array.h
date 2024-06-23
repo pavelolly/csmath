@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #define INSTANTIATE_DARRAY(struct_name, type) \
-typedef struct {                              \
+typedef struct struct_name {                  \
 	type *items;                              \
 	size_t count;                             \
 	size_t capacity;                          \
