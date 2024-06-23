@@ -42,12 +42,12 @@ TreeNode *parseExpression(Token *tokens, size_t count, const char *raw_expressio
     }
 
     peek_token = tokens + idx;
-    if (peek_token->type == BRACE_R) {
+    if (peek_token->type == PAREN_R) {
         result_tree = term;
         goto success;
     }
     if (peek_token->type != PLUS && peek_token->type != MINUS) {
-        printf("[PARSER ERROR] Expected PLUS or MINUS or BRACE_R but got %s\n", TokenTypeToString(peek_token->type));
+        printf("[PARSER ERROR] Expected PLUS or MINUS or PAREN_R but got %s\n", TokenTypeToString(peek_token->type));
         puts(raw_expression);
         printf("%*c^\n", peek_token->index ? peek_token->index + 1 : peek_token->index, '\0');
         
@@ -108,7 +108,7 @@ TreeNode *parseTerm(Token *tokens, size_t count, const char *raw_expression, siz
     }
 
     peek_token = tokens + idx;
-    if (peek_token->type == PLUS || peek_token->type == MINUS || peek_token->type == BRACE_R) {
+    if (peek_token->type == PLUS || peek_token->type == MINUS || peek_token->type == PAREN_R) {
         result_tree = factor;
         goto success;
     }
@@ -163,7 +163,7 @@ TreeNode *parseFactor(Token *tokens, size_t count, const char *raw_expression, s
         result_tree = TreeAddChildValue(NULL, number_token, sizeof(Token));
         idx += 1;
     }
-    else if (tokens->type == BRACE_L) {
+    else if (tokens->type == PAREN_L) {
         idx += 1;
 
         size_t parsed_count;
@@ -176,14 +176,14 @@ TreeNode *parseFactor(Token *tokens, size_t count, const char *raw_expression, s
         }
 
         if (idx == count) {
-            printf("[PARSER ERROR] this opening brace doesn't have match\n");
+            printf("[PARSER ERROR] this opening parenthesis doesn't have match\n");
             puts(raw_expression);
             printf("%*c^\n", tokens->index ? tokens->index + 1 : tokens->index, '\0');
             goto failure;
         }
 
-        if (tokens[idx].type != BRACE_R) {
-            printf("[PARSER ERROR] expected BRACE_R but got %s\n", TokenTypeToString(tokens[idx].type));
+        if (tokens[idx].type != PAREN_R) {
+            printf("[PARSER ERROR] expected PAREN_R but got %s\n", TokenTypeToString(tokens[idx].type));
             puts(raw_expression);
             printf("%*c^\n", tokens[idx].index ? tokens[idx].index + 1 : tokens[idx].index, '\0');
             goto failure;
@@ -192,7 +192,7 @@ TreeNode *parseFactor(Token *tokens, size_t count, const char *raw_expression, s
         idx += 1;
     }
     else {
-        printf("[PARSER ERROR] expected NUMBER ot BRACE_L but got %s\n", TokenTypeToString(tokens->type));
+        printf("[PARSER ERROR] expected NUMBER ot PAREN_L but got %s\n", TokenTypeToString(tokens->type));
         puts(raw_expression);
         printf("%*c^\n", tokens->index ? tokens->index + 1 : tokens->index, '\0');
         goto failure;

@@ -10,8 +10,8 @@ typedef enum TokenType {
     MINUS,
     STAR,
     SLASH,
-    BRACE_L,
-    BRACE_R
+    PAREN_L,
+    PAREN_R
 } TokenType;
 
 typedef struct Token {
@@ -43,8 +43,8 @@ const char *TokenTypeToString(TokenType type) {
         case MINUS:   return "MINUS";
         case STAR:    return "STAR";
         case SLASH:   return "SLASH";
-        case BRACE_L: return "BRACE_L";
-        case BRACE_R: return "BRACE_R";
+        case PAREN_L: return "PAREN_L";
+        case PAREN_R: return "PAREN_R";
         default:      return "<unknown>";
     }
 }
@@ -73,10 +73,10 @@ int TokenizeExpression(Tokens *tokens, const char *expr) {
                 token.type = SLASH;
                 break;
             case '(':
-                token.type = BRACE_L;
+                token.type = PAREN_L;
                 break;
             case ')':
-                token.type = BRACE_R;
+                token.type = PAREN_R;
                 break;
         }
 
@@ -140,11 +140,11 @@ void printTokens(Tokens *tokens) {
             case SLASH:
                 printf("[TOKEN] [idx %d] Slash\n", token.index);
                 break;
-            case BRACE_L:
-                printf("[TOKEN] [idx %d] Opening Brace\n", token.index);
+            case PAREN_L:
+                printf("[TOKEN] [idx %d] Opening Parenthesis\n", token.index);
                 break;
-            case BRACE_R:
-                printf("[TOKEN] [idx %d] Closing Brace\n", token.index);
+            case PAREN_R:
+                printf("[TOKEN] [idx %d] Closing Parenthesis\n", token.index);
                 break;
             default:
                 printf("[TOKEN] INVALID (type:%d)\n", token.type);
