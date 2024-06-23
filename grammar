@@ -7,4 +7,4 @@ term       := factor STAR term  |
 			  factor
 			  
 factor     := NUMBER
-# factor     := BRACE_L expression BRACE_R
+factor     := BRACE_L expression BRACE_R

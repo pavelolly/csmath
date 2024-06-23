@@ -1,7 +1,8 @@
-- implement tree        --- patrially done (enough for now)
-- parse expression
-- token type to string  --- done
+- implement tree                       --- patrially done (enough for now)
+- parse expression                     --- done
+- token type to string                 --- done
 - evaluate expression
+- rewrite parsing and error reports
 - add math constants
 - add variables
 - add functions

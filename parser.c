@@ -42,8 +42,12 @@ TreeNode *parseExpression(Token *tokens, size_t count, const char *raw_expressio
     }
 
     peek_token = tokens + idx;
+    if (peek_token->type == BRACE_R) {
+        result_tree = term;
+        goto success;
+    }
     if (peek_token->type != PLUS && peek_token->type != MINUS) {
-        printf("[PARSER ERROR] Expected PLUS or MINUS but got %s\n", TokenTypeToString(peek_token->type));
+        printf("[PARSER ERROR] Expected PLUS or MINUS or BRACE_R but got %s\n", TokenTypeToString(peek_token->type));
         puts(raw_expression);
         printf("%*c^\n", peek_token->index ? peek_token->index + 1 : peek_token->index, '\0');
         
@@ -72,6 +76,7 @@ failure:
     TreeFree(term);
     TreeFree(operation);
     TreeFree(expression);
+    result_tree = NULL;
 success:
     SETPTR(tokens_parsed_count, idx);
     return result_tree;
@@ -103,7 +108,7 @@ TreeNode *parseTerm(Token *tokens, size_t count, const char *raw_expression, siz
     }
 
     peek_token = tokens + idx;
-    if (peek_token->type == PLUS || peek_token->type == MINUS) {
+    if (peek_token->type == PLUS || peek_token->type == MINUS || peek_token->type == BRACE_R) {
         result_tree = factor;
         goto success;
     }
@@ -137,6 +142,7 @@ failure:
     TreeFree(factor);
     TreeFree(operation);
     TreeFree(term);
+    result_tree = NULL;
 success:
     SETPTR(tokens_parsed_count, idx);
     return result_tree;
@@ -148,24 +154,57 @@ TreeNode *parseFactor(Token *tokens, size_t count, const char *raw_expression, s
 
     if (count == 0) {
         printf("[PARSER ERROR] Empty factor\n");
-        SETPTR(tokens_parsed_count, idx);
-        return NULL;
+        goto failure;
     }
 
-    if (tokens->type != NUMBER) {
-        printf("[PARSER ERROR] Expected NUMBER but got %s\n", TokenTypeToString(tokens->type));
+    if (tokens->type == NUMBER) {
+        Token *number_token = malloc(sizeof(Token));
+        memcpy(number_token, tokens, sizeof(Token));
+        result_tree = TreeAddChildValue(NULL, number_token, sizeof(Token));
+        idx += 1;
+    }
+    else if (tokens->type == BRACE_L) {
+        idx += 1;
+
+        size_t parsed_count;
+        result_tree = parseExpression(tokens + idx, count - idx, raw_expression, &parsed_count);
+        
+        idx += parsed_count;
+
+        if (!result_tree) {
+            goto failure;
+        }
+
+        if (idx == count) {
+            printf("[PARSER ERROR] this opening brace doesn't have match\n");
+            puts(raw_expression);
+            printf("%*c^\n", tokens->index ? tokens->index + 1 : tokens->index, '\0');
+            goto failure;
+        }
+
+        if (tokens[idx].type != BRACE_R) {
+            printf("[PARSER ERROR] expected BRACE_R but got %s\n", TokenTypeToString(tokens[idx].type));
+            puts(raw_expression);
+            printf("%*c^\n", tokens[idx].index ? tokens[idx].index + 1 : tokens[idx].index, '\0');
+            goto failure;
+        }
+
+        idx += 1;
+    }
+    else {
+        printf("[PARSER ERROR] expected NUMBER ot BRACE_L but got %s\n", TokenTypeToString(tokens->type));
         puts(raw_expression);
         printf("%*c^\n", tokens->index ? tokens->index + 1 : tokens->index, '\0');
-        return NULL;
+        goto failure;
     }
 
-    Token *number_token = malloc(sizeof(Token));
-    memcpy(number_token, tokens, sizeof(Token));
-    result_tree = TreeAddChildValue(NULL, number_token, sizeof(Token));
-
-    idx += 1;
+    goto success;
+    
+failure:
+    TreeFree(result_tree);
+    result_tree = NULL;
+success:
     SETPTR(tokens_parsed_count, idx);
-
     return result_tree;
 }
 

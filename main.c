@@ -17,7 +17,7 @@
 
 
 int main(void) {
-    const char *expression_file_path = "expression.txt";
+    const char *expression_file_path = "expression.csm";
     DString expression_builder = {0};
     if (!DStringReadFile(&expression_builder, expression_file_path)) {
         printf("Could not read expression from '%s': %s\n", expression_file_path, strerror(errno), expression_builder.items);
