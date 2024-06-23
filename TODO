@@ -1,5 +1,6 @@
-- implement tree
+- implement tree        --- patrially done (enough for now)
 - parse expression
+- token type to string
 - evaluate expression
 - add constants
 - add variables
@@ -8,4 +9,5 @@
 - find domain
 - derivative
 
+- big integers
 - simplify

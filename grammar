@@ -1,0 +1,10 @@
+expression := term PLUS expression  |
+              term MINUS expression |
+			  term
+
+term       := factor STAR term  |
+              factor SLASH term |
+			  factor
+			  
+factor     := NUMBER
+# factor     := BRACE_L expression BRACE_R
